@@ -169,15 +169,19 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+os.makedirs(STATIC_ROOT, exist_ok=True)
 
 STORAGES = {
     "default": {
-        "ENGINE": "django.core.files.storage.FileSystemStorage",
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "ENGINE": "whitenoise.storage.CompressedStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
+
+# Allow WhiteNoise to find files in STATICFILES_DIRS directly on serverless platforms
+WHITENOISE_USE_FINDERS = True
 
 LOGIN_URL = 'landing'
 LOGIN_REDIRECT_URL = 'landing'
