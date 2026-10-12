@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block title %}Teacher Dashboard - Silent Classroom Doubt Box{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Faculty Portal: {{ teacher.name }}</h1>
+    <p class="page-subtitle">
+      Teacher ID: <strong>{{ teacher.teacher_id }}</strong> &bull; Department Faculty Control Center
+    </p>
+  </div>
+  <div>
+    <a href="{% url 'teacher_all_doubts' %}" class="btn btn-primary">
+      📋 View All Student Doubts &rarr;
+    </a>
+  </div>
+</div>
+
+<!-- Teacher Metrics Overview -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon blue">👥</div>
+    <div>
+      <div class="stat-value">{{ total_students }}</div>
+      <div class="stat-label">Total Enrolled Students</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon purple">📬</div>
+    <div>
+      <div class="stat-value">{{ total_doubts }}</div>
+      <div class="stat-label">Total Doubts Received</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon amber">⏳</div>
+    <div>
+      <div class="stat-value">{{ pending_doubts }}</div>
+      <div class="stat-label">Pending Clarifications</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon green">✅</div>
+    <div>
+      <div class="stat-value">{{ clarified_doubts }}</div>
+      <div class="stat-label">Clarified Doubts</div>
+    </div>
+  </div>
+</div>
+
+<!-- Two-Column Layout: Pending Doubts Queue & Subject Breakdown -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem;">
+  
+  <!-- Pending Doubts Needing Attention -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">
+        <span>⏳</span>
+        <span>Doubts Awaiting Your Clarification</span>
+      </h2>
+      <span class="badge badge-pending">{{ pending_doubts }} Pending</span>
+    </div>
+
+    {% if recent_pending %}
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        {% for doubt in recent_pending %}
+          <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem; background-color: #fffdfa;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.25rem;">
+              <span class="badge badge-subject">{{ doubt.subject.name }}</span>
+              <span style="font-size: 0.78rem; color: var(--text-muted);">{{ doubt.created_at|timesince }} ago</span>
+            </div>
+
+            <div style="font-size: 0.86rem; color: var(--text-muted); margin-bottom: 0.35rem;">
+              Student: <strong>{{ doubt.student.name }}</strong> ({{ doubt.student.register_number }})
+            </div>
+
+            <p style="font-size: 0.95rem; font-weight: 500; color: var(--text-dark); margin-bottom: 0.85rem;">
+              {{ doubt.question|truncatechars:120 }}
+            </p>
+
+            <div style="text-align: right;">
+              <a href="{% url 'teacher_answer_doubt' doubt.id %}" class="btn btn-primary btn-sm">
+                ✏️ Answer Doubt
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if pending_doubts > 6 %}
+        <div style="text-align: center; margin-top: 1rem;">
+          <a href="{% url 'teacher_all_doubts' %}?status=PENDING" class="btn btn-secondary btn-sm">
+            View All {{ pending_doubts }} Pending Doubts &rarr;
+          </a>
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="empty-state" style="padding: 2rem 1rem;">
+        <div class="empty-state-icon">🎉</div>
+        <h4 class="empty-state-title">Inbox Zero!</h4>
+        <p class="empty-state-text">All student doubts have been answered. Outstanding work!</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Subject Activity Breakdown -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">
+        <span>📊</span>
+        <span>Subject-wise Doubts Distribution</span>
+      </h2>
+      <a href="{% url 'teacher_all_doubts' %}" class="btn btn-secondary btn-sm">View All</a>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th style="text-align: center;">Total</th>
+            <th style="text-align: center;">Pending</th>
+            <th style="text-align: center;">Clarified</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for subj in subject_stats %}
+            <tr>
+              <td>
+                <strong>{{ subj.name }}</strong>
+                {% if subj.code %}<span style="font-size: 0.78rem; color: var(--text-muted);">({{ subj.code }})</span>{% endif %}
+              </td>
+              <td style="text-align: center; font-weight: 600;">{{ subj.total_doubts }}</td>
+              <td style="text-align: center;">
+                {% if subj.pending_doubts > 0 %}
+                  <span class="badge badge-pending">{{ subj.pending_doubts }}</span>
+                {% else %}
+                  <span style="color: var(--text-muted);">-</span>
+                {% endif %}
+              </td>
+              <td style="text-align: center;">
+                {% if subj.clarified_doubts > 0 %}
+                  <span class="badge badge-clarified">{{ subj.clarified_doubts }}</span>
+                {% else %}
+                  <span style="color: var(--text-muted);">-</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="4" style="text-align: center; color: var(--text-muted);">No subjects found.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

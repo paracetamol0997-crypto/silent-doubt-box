@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to Silent Classroom Doubt Box{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+  <div class="hero-pill">
+    🔒 100% Student-to-Teacher Confidentiality &bull; Zero Peer Visibility
+  </div>
+  
+  <h1 class="hero-title">Silent Classroom Doubt Box</h1>
+  <p class="hero-tagline">&ldquo;Ask without fear. Learn without hesitation.&rdquo;</p>
+  <p class="hero-desc">
+    An anonymous-feeling private space where students can ask classroom doubts comfortably
+    and teachers can clarify them later. No public classroom pressure, no embarrassment.
+  </p>
+
+  <div class="hero-actions">
+    <a href="{% url 'student_login' %}" class="btn btn-secondary" style="font-size: 1.05rem;">
+      🎒 Student Login
+    </a>
+    <a href="{% url 'teacher_login' %}" class="btn btn-primary" style="font-size: 1.05rem;">
+      👨‍🏫 Teacher Login
+    </a>
+  </div>
+
+  <!-- Live Stats Overview -->
+  <div class="stats-grid" style="margin-top: 2rem;">
+    <div class="stat-card">
+      <div class="stat-icon blue">👥</div>
+      <div>
+        <div class="stat-value">{{ total_students }}</div>
+        <div class="stat-label">Enrolled Students</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon amber">❓</div>
+      <div>
+        <div class="stat-value">{{ total_doubts }}</div>
+        <div class="stat-label">Doubts Submitted</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">✅</div>
+      <div>
+        <div class="stat-value">{{ clarified_doubts }}</div>
+        <div class="stat-label">Doubts Clarified</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Privacy Guarantee Card -->
+<div class="privacy-banner">
+  <div class="privacy-banner-icon">🛡️</div>
+  <div>
+    <h3 class="privacy-banner-title">Guaranteed Privacy Architecture</h3>
+    <p class="privacy-banner-desc">
+      Students can <strong>NEVER</strong> see other students' doubts. Your queries are visible strictly to course instructors.
+      There is no public discussion board, no peer scrutiny, and no social friction.
+    </p>
+  </div>
+</div>
+
+<!-- Workflow Steps -->
+<section class="workflow-section">
+  <h2 class="section-title">How It Works in 5 Simple Steps</h2>
+  <p class="section-subtitle">A seamless bridge between shy students and dedicated faculty.</p>
+
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-number">1</div>
+      <h3 class="step-title">Login</h3>
+      <p class="step-desc">Sign in with your College Register Number and Student Name securely.</p>
+    </div>
+
+    <div class="step-card">
+      <div class="step-number">2</div>
+      <h3 class="step-title">Select Subject</h3>
+      <p class="step-desc">Pick the relevant course (Data Structures, Networks, DBMS, ML, etc.).</p>
+    </div>
+
+    <div class="step-card">
+      <div class="step-number">3</div>
+      <h3 class="step-title">Ask Your Doubt</h3>
+      <p class="step-desc">Type your question openly. No need to worry about what classmates think.</p>
+    </div>
+
+    <div class="step-card">
+      <div class="step-number">4</div>
+      <h3 class="step-title">Teacher Clarifies</h3>
+      <p class="step-desc">Faculty reviews doubts on their dedicated dashboard and writes thorough explanations.</p>
+    </div>
+
+    <div class="step-card">
+      <div class="step-number">5</div>
+      <h3 class="step-title">View the Answer</h3>
+      <p class="step-desc">Check your private "My Doubts" section anytime to review teacher clarifications.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Demo Testing Credentials Box -->
+<div class="demo-box">
+  <div class="demo-title">
+    <span>🧪</span>
+    <span>Demo Login Credentials for Quick Evaluation</span>
+  </div>
+  <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem;">
+    Use the pre-seeded demo accounts below to test both student and teacher roles immediately.
+  </p>
+
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-role-title">
+        <span>👨‍🎓 Student: Rahul Kumar</span>
+        <span class="badge badge-pending">Active Demo</span>
+      </div>
+      <div class="demo-cred-row">
+        <span>Register No:</span>
+        <span class="demo-cred-val">23CSE101</span>
+      </div>
+      <div class="demo-cred-row">
+        <span>Student Name:</span>
+        <span class="demo-cred-val">Rahul Kumar</span>
+      </div>
+      <div class="demo-cred-row">
+        <span>Password:</span>
+        <span class="demo-cred-val">rahul@123</span>
+      </div>
+      <a href="{% url 'student_login' %}" class="btn demo-fill-btn">Go to Student Login</a>
+    </div>
+
+    <div class="demo-card">
+      <div class="demo-role-title">
+        <span>👩‍🎓 Student: Priya Sharma</span>
+        <span class="badge badge-pending">Active Demo</span>
+      </div>
+      <div class="demo-cred-row">
+        <span>Register No:</span>
+        <span class="demo-cred-val">23CSE102</span>
+      </div>
+      <div class="demo-cred-row">
+        <span>Student Name:</span>
+        <span class="demo-cred-val">Priya Sharma</span>
+      </div>
+      <div class="demo-cred-row">
+        <span>Password:</span>
+        <span class="demo-cred-val">priya@123</span>
+      </div>
+      <a href="{% url 'student_login' %}" class="btn demo-fill-btn">Go to Student Login</a>
+    </div>
+
+    <div class="demo-card">
+      <div class="demo-role-title">
+        <span>👨‍🏫 Teacher: Dr. Ramesh Sharma</span>
+        <span class="badge badge-clarified">Faculty</span>
+      </div>
+      <div class="demo-cred-row">
+        <span>Teacher ID:</span>
+        <span class="demo-cred-val">T101</span>
+      </div>
+      <div class="demo-cred-row">
+        <span>Role:</span>
+        <span class="demo-cred-val">Senior Professor</span>
+      </div>
+      <div class="demo-cred-row">
+        <span>Password:</span>
+        <span class="demo-cred-val">teacher@123</span>
+      </div>
+      <a href="{% url 'teacher_login' %}" class="btn demo-fill-btn">Go to Teacher Login</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

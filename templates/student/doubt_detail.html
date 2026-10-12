@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Doubt Details - Silent Classroom Doubt Box{% endblock %}
+
+{% block content %}
+<div class="container-narrow">
+  <!-- Navigation Breadcrumb -->
+  <div style="margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
+    <a href="{% url 'student_my_doubts' %}" class="btn btn-secondary btn-sm">
+      &larr; Back to My Doubts
+    </a>
+    <span style="font-size: 0.85rem; color: var(--text-muted);">
+      Doubt Ref: #{{ doubt.id }}
+    </span>
+  </div>
+
+  <div class="doubt-card">
+    <div class="doubt-card-meta">
+      <div class="doubt-card-tags">
+        <span class="badge badge-subject">📚 {{ doubt.subject.name }}</span>
+        {% if doubt.status == 'CLARIFIED' %}
+          <span class="badge badge-clarified">✓ Clarified</span>
+        {% else %}
+          <span class="badge badge-pending">⏳ Pending Review</span>
+        {% endif %}
+      </div>
+      <div class="doubt-card-time">
+        Submitted on {{ doubt.created_at|date:"F d, Y - h:i A" }}
+      </div>
+    </div>
+
+    <!-- Doubt Question -->
+    <div class="doubt-question-box">
+      <div class="doubt-question-title">Your Question</div>
+      <div class="doubt-question-text">
+        {{ doubt.question }}
+      </div>
+    </div>
+
+    <!-- Clarification / Teacher Answer -->
+    {% if doubt.status == 'CLARIFIED' %}
+      <div class="doubt-answer-box">
+        <div class="doubt-answer-header">
+          <span>👨‍🏫 Teacher's Clarification</span>
+          <span>
+            Prof. {{ doubt.answered_by.name }}
+            {% if doubt.answered_at %}
+              &bull; {{ doubt.answered_at|date:"M d, Y - h:i A" }}
+            {% endif %}
+          </span>
+        </div>
+        <div class="doubt-answer-text">
+          {{ doubt.teacher_answer }}
+        </div>
+      </div>
+    {% else %}
+      <div class="doubt-pending-notice">
+        <span>⏳</span>
+        <span>
+          <strong>Status: Pending.</strong> Your professor has received this doubt and is preparing a clarification. You will see their answer here once posted.
+        </span>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

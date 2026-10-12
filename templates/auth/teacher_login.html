@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Teacher Login - Silent Classroom Doubt Box{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-icon" style="background-color: #f3e8ff; color: #7e22ce;">👨‍🏫</div>
+      <h2 class="auth-title">Teacher Portal Login</h2>
+      <p class="auth-subtitle">Sign in to review, filter, and answer all student doubts</p>
+    </div>
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger" style="margin-bottom: 1.25rem;">
+        {% for error in form.non_field_errors %}
+          <div>{{ error }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="POST" action="{% url 'teacher_login' %}" novalidate>
+      {% csrf_token %}
+
+      <!-- Teacher ID -->
+      <div class="form-group">
+        <label for="{{ form.teacher_id.id_for_label }}" class="form-label">
+          Teacher / Faculty ID <span style="color: #ef4444;">*</span>
+        </label>
+        {{ form.teacher_id }}
+        {% if form.teacher_id.errors %}
+          {% for error in form.teacher_id.errors %}
+            <span class="form-error">{{ error }}</span>
+          {% endfor %}
+        {% else %}
+          <div class="form-help">e.g. T101 or T102</div>
+        {% endif %}
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="{{ form.password.id_for_label }}" class="form-label">
+          Password <span style="color: #ef4444;">*</span>
+        </label>
+        {{ form.password }}
+        {% if form.password.errors %}
+          {% for error in form.password.errors %}
+            <span class="form-error">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" style="padding: 0.8rem; font-size: 1rem; margin-top: 1.5rem; background-color: #7e22ce; border-color: #7e22ce;">
+        Login as Teacher &rarr;
+      </button>
+    </form>
+
+    <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+      <p style="font-size: 0.85rem; color: var(--text-muted);">
+        Are you a student? <a href="{% url 'student_login' %}" style="color: var(--primary); font-weight: 600;">Go to Student Login</a>
+      </p>
+    </div>
+
+    <!-- Quick Demo Accounts One-Click Fill -->
+    <div style="margin-top: 1.5rem; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: var(--radius-md); padding: 0.85rem;">
+      <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.5rem;">
+        ⚡ Quick Demo Autofill:
+      </div>
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="fillTeacherCredentials('T101', 'teacher@123')">
+          Dr. Ramesh Sharma (T101)
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="fillTeacherCredentials('T102', 'teacher@123')">
+          Prof. Anjali Verma (T102)
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

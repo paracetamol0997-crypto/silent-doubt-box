@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Silent Classroom Doubt Box{% endblock %} | College Academic Portal</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <div class="app-container">
+    <!-- Navigation Bar -->
+    <header class="navbar">
+      <div class="navbar-inner">
+        <a href="{% url 'landing' %}" class="brand-link">
+          <div class="brand-logo-icon">🎓</div>
+          <div class="brand-text">
+            <h1>Silent Doubt Box</h1>
+            <span>College Academic Portal</span>
+          </div>
+        </a>
+
+        <button class="mobile-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          ☰
+        </button>
+
+        <nav>
+          <ul class="nav-links">
+            {% if request.user.is_authenticated %}
+              {% if request.user.is_student %}
+                <!-- Student Navigation -->
+                <li><a href="{% url 'student_dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'student_dashboard' %}active{% endif %}">📊 Dashboard</a></li>
+                <li><a href="{% url 'ask_doubt' %}" class="nav-link {% if request.resolver_match.url_name == 'ask_doubt' %}active{% endif %}">✍️ Ask a Doubt</a></li>
+                <li><a href="{% url 'student_my_doubts' %}" class="nav-link {% if request.resolver_match.url_name == 'student_my_doubts' %}active{% endif %}">📂 My Doubts</a></li>
+                <li class="user-badge">
+                  <span class="user-badge-role role-student">Student</span>
+                  <span class="user-badge-name">{{ request.user.name }}</span>
+                  <span class="user-badge-id">({{ request.user.register_number }})</span>
+                </li>
+                <li><a href="{% url 'logout' %}" class="btn btn-secondary btn-sm">Logout</a></li>
+              {% elif request.user.is_teacher %}
+                <!-- Teacher Navigation -->
+                <li><a href="{% url 'teacher_dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'teacher_dashboard' %}active{% endif %}">📊 Dashboard</a></li>
+                <li><a href="{% url 'teacher_all_doubts' %}" class="nav-link {% if request.resolver_match.url_name == 'teacher_all_doubts' %}active{% endif %}">📋 All Student Doubts</a></li>
+                <li><a href="{% url 'teacher_students_list' %}" class="nav-link {% if request.resolver_match.url_name == 'teacher_students_list' %}active{% endif %}">👥 Students</a></li>
+                <li class="user-badge">
+                  <span class="user-badge-role role-teacher">Teacher</span>
+                  <span class="user-badge-name">{{ request.user.name }}</span>
+                  <span class="user-badge-id">({{ request.user.teacher_id }})</span>
+                </li>
+                <li><a href="{% url 'logout' %}" class="btn btn-secondary btn-sm">Logout</a></li>
+              {% endif %}
+            {% else %}
+              <!-- Public Navigation -->
+              <li><a href="{% url 'landing' %}" class="nav-link">Home</a></li>
+              <li><a href="{% url 'student_login' %}" class="btn btn-secondary btn-sm">Student Login</a></li>
+              <li><a href="{% url 'teacher_login' %}" class="btn btn-primary btn-sm">Teacher Login</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Flash Messages -->
+    {% if messages %}
+      <div class="messages-container">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags|default:'info' }}">
+            <span>{{ message }}</span>
+            <button type="button" class="alert-close" aria-label="Close">&times;</button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <p><strong>Silent Classroom Doubt Box</strong> &bull; College Academic Privacy &amp; Learning Support Portal</p>
+        <p>Designed for shy, nervous, or hesitant students to ask doubts comfortably and privately.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="{% static 'js/main.js' %}"></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

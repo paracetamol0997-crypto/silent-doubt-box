@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Enrolled Students - Silent Classroom Doubt Box{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Enrolled Students Directory</h1>
+    <p class="page-subtitle">
+      All registered students in the department and their doubt inquiry statistics.
+    </p>
+  </div>
+  <div>
+    <a href="{% url 'teacher_all_doubts' %}" class="btn btn-primary">
+      📋 View All Doubts
+    </a>
+  </div>
+</div>
+
+<!-- Search Filter -->
+<div class="filter-bar">
+  <form method="GET" action="{% url 'teacher_students_list' %}">
+    <div class="filter-item search-item">
+      <input
+        type="text"
+        name="search"
+        class="form-input"
+        placeholder="🔍 Search student by name or register number..."
+        value="{{ search_query }}"
+      >
+    </div>
+    <div>
+      <button type="submit" class="btn btn-primary btn-sm">Search</button>
+    </div>
+    {% if search_query %}
+      <div>
+        <a href="{% url 'teacher_students_list' %}" class="btn btn-secondary btn-sm">Reset</a>
+      </div>
+    {% endif %}
+  </form>
+</div>
+
+<!-- Students Table -->
+<div class="card" style="padding: 0; overflow: hidden;">
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Register No</th>
+          <th>Student Name</th>
+          <th>Email</th>
+          <th style="text-align: center;">Total Doubts</th>
+          <th style="text-align: center;">Pending</th>
+          <th style="text-align: center;">Clarified</th>
+          <th style="text-align: right;">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+          <tr>
+            <td>
+              <span style="font-family: monospace; font-weight: 700; color: var(--primary);">
+                {{ student.register_number }}
+              </span>
+            </td>
+            <td>
+              <strong>{{ student.name }}</strong>
+            </td>
+            <td style="color: var(--text-muted); font-size: 0.85rem;">
+              {{ student.email|default:"Not specified" }}
+            </td>
+            <td style="text-align: center; font-weight: 600;">
+              {{ student.doubts_count }}
+            </td>
+            <td style="text-align: center;">
+              {% if student.pending_count > 0 %}
+                <span class="badge badge-pending">{{ student.pending_count }}</span>
+              {% else %}
+                <span style="color: var(--text-muted);">-</span>
+              {% endif %}
+            </td>
+            <td style="text-align: center;">
+              {% if student.clarified_count > 0 %}
+                <span class="badge badge-clarified">{{ student.clarified_count }}</span>
+              {% else %}
+                <span style="color: var(--text-muted);">-</span>
+              {% endif %}
+            </td>
+            <td style="text-align: right;">
+              <a href="{% url 'teacher_all_doubts' %}?search={{ student.register_number }}" class="btn btn-secondary btn-sm">
+                View Doubts &rarr;
+              </a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+              No students found matching your search.
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

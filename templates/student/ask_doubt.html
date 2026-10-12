@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Ask a Doubt - Silent Classroom Doubt Box{% endblock %}
+
+{% block content %}
+<div class="container-narrow">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Ask a Doubt Privately</h1>
+      <p class="page-subtitle">Submit your question directly to your professors without hesitation.</p>
+    </div>
+    <div>
+      <a href="{% url 'student_my_doubts' %}" class="btn btn-secondary btn-sm">
+        &larr; View My Doubts
+      </a>
+    </div>
+  </div>
+
+  <!-- Confidentiality Banner -->
+  <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius-md); padding: 0.85rem 1.15rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; color: #166534; font-size: 0.88rem;">
+    <span style="font-size: 1.25rem;">🔒</span>
+    <span>
+      <strong>100% Confidential:</strong> Your classmates will <em>never</em> see your question. Only authorized subject teachers can view and answer.
+    </span>
+  </div>
+
+  <div class="card">
+    <form method="POST" action="{% url 'ask_doubt' %}" novalidate>
+      {% csrf_token %}
+
+      <!-- Subject Selection -->
+      <div class="form-group">
+        <label for="{{ form.subject.id_for_label }}" class="form-label">
+          Select Subject <span style="color: #ef4444;">*</span>
+        </label>
+        {{ form.subject }}
+        {% if form.subject.errors %}
+          {% for error in form.subject.errors %}
+            <span class="form-error">{{ error }}</span>
+          {% endfor %}
+        {% else %}
+          <div class="form-help">Choose the academic course relevant to your doubt</div>
+        {% endif %}
+      </div>
+
+      <!-- Doubt Question -->
+      <div class="form-group">
+        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+          <label for="{{ form.question.id_for_label }}" class="form-label">
+            Your Doubt / Question <span style="color: #ef4444;">*</span>
+          </label>
+          <span id="question-char-count" style="font-size: 0.78rem; color: var(--text-muted);">0 characters</span>
+        </div>
+        {{ form.question }}
+        {% if form.question.errors %}
+          {% for error in form.question.errors %}
+            <span class="form-error">{{ error }}</span>
+          {% endfor %}
+        {% else %}
+          <div class="form-help">
+            Example: <em>&ldquo;Sir, I am not understanding the difference between stack and queue. Can you please explain it?&rdquo;</em>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Sample Prompts / Quick Inspiration -->
+      <div style="background-color: var(--bg-subtle); border-radius: var(--radius-md); padding: 0.85rem 1rem; margin-bottom: 1.5rem; font-size: 0.84rem; color: var(--text-muted);">
+        <strong>💡 Tips for asking a great question:</strong>
+        <ul style="margin: 0.35rem 0 0 1.25rem; line-height: 1.5;">
+          <li>Mention the specific topic, concept, or theorem you're finding difficult.</li>
+          <li>Include the line of code, formula, or textbook page number if relevant.</li>
+          <li>State what you understand so far and where you are getting stuck.</li>
+        </ul>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+        <a href="{% url 'student_dashboard' %}" class="btn btn-secondary">
+          Cancel
+        </a>
+        <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.75rem; font-size: 1rem;">
+          Submit Doubt Privately &rarr;
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

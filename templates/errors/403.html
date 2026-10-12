@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Access Denied (403) - Silent Classroom Doubt Box{% endblock %}
+
+{% block content %}
+<div class="container-narrow" style="text-align: center; padding: 3rem 1rem;">
+  <div style="width: 72px; height: 72px; background-color: #fee2e2; color: #dc2626; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 1.5rem;">
+    🛡️
+  </div>
+
+  <h1 style="font-size: 2rem; color: #991b1b; margin-bottom: 0.75rem;">
+    Access Restricted (403 Forbidden)
+  </h1>
+
+  <p style="font-size: 1.05rem; color: var(--text-dark); margin-bottom: 1.25rem; font-weight: 500;">
+    {% if exception %}
+      {{ exception }}
+    {% else %}
+      You do not have permission to view or manipulate this resource.
+    {% endif %}
+  </p>
+
+  <div style="background-color: #fff1f2; border: 1px solid #fecdd3; border-radius: var(--radius-md); padding: 1.25rem; max-width: 580px; margin: 0 auto 2rem; text-align: left; font-size: 0.9rem; color: #881337;">
+    <strong>🔒 Privacy &amp; Role Boundary Enforcement:</strong>
+    <ul style="margin: 0.5rem 0 0 1.25rem; line-height: 1.6;">
+      <li>Students can never access other students' private doubts or teacher administrative views.</li>
+      <li>URL tampering or unauthorized identifier switching is actively blocked by the server.</li>
+      <li>If you need assistance, please contact the college course coordinator.</li>
+    </ul>
+  </div>
+
+  <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+    {% if request.user.is_authenticated %}
+      {% if request.user.is_student %}
+        <a href="{% url 'student_dashboard' %}" class="btn btn-primary">
+          &larr; Return to Student Dashboard
+        </a>
+      {% elif request.user.is_teacher %}
+        <a href="{% url 'teacher_dashboard' %}" class="btn btn-primary">
+          &larr; Return to Teacher Dashboard
+        </a>
+      {% endif %}
+    {% else %}
+      <a href="{% url 'landing' %}" class="btn btn-primary">
+        &larr; Back to Home
+      </a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

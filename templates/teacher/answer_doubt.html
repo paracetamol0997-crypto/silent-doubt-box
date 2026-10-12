@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Answer Doubt - Silent Classroom Doubt Box{% endblock %}
+
+{% block content %}
+<div class="container-narrow">
+  <!-- Back Navigation -->
+  <div style="margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
+    <a href="{% url 'teacher_all_doubts' %}" class="btn btn-secondary btn-sm">
+      &larr; Back to All Doubts
+    </a>
+    <span style="font-size: 0.85rem; color: var(--text-muted);">
+      Doubt Ref: #{{ doubt.id }}
+    </span>
+  </div>
+
+  <!-- Doubt Information Card -->
+  <div class="card" style="margin-bottom: 1.5rem;">
+    <div class="card-header">
+      <h2 class="card-title">
+        <span>📖</span>
+        <span>Student Doubt Details</span>
+      </h2>
+      {% if doubt.status == 'CLARIFIED' %}
+        <span class="badge badge-clarified">Clarified</span>
+      {% else %}
+        <span class="badge badge-pending">Pending Review</span>
+      {% endif %}
+    </div>
+
+    <!-- Student & Subject Details -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.25rem; background: var(--bg-subtle); padding: 1rem; border-radius: var(--radius-md);">
+      <div>
+        <div style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Student</div>
+        <div style="font-weight: 600; color: var(--text-dark); font-size: 1rem;">
+          {{ doubt.student.name }}
+        </div>
+        <div style="font-family: monospace; font-size: 0.85rem; color: var(--primary);">
+          {{ doubt.student.register_number }}
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Subject</div>
+        <div style="font-weight: 600; color: var(--text-dark); font-size: 1rem;">
+          {{ doubt.subject.name }}
+        </div>
+        <div style="font-size: 0.82rem; color: var(--text-muted);">
+          Submitted: {{ doubt.created_at|date:"M d, Y - h:i A" }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Question -->
+    <div class="doubt-question-box">
+      <div class="doubt-question-title">Student's Question</div>
+      <div class="doubt-question-text" style="font-size: 1.1rem; line-height: 1.6; background-color: #fdfefe; border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-md);">
+        {{ doubt.question }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Teacher Answer Form Card -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">
+        <span>✏️</span>
+        <span>Provide Your Clarification</span>
+      </h2>
+    </div>
+
+    <form method="POST" action="{% url 'teacher_answer_doubt' doubt.id %}" novalidate>
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="{{ form.teacher_answer.id_for_label }}" class="form-label">
+          Your Answer / Explanation <span style="color: #ef4444;">*</span>
+        </label>
+        {{ form.teacher_answer }}
+        {% if form.teacher_answer.errors %}
+          {% for error in form.teacher_answer.errors %}
+            <span class="form-error">{{ error }}</span>
+          {% endfor %}
+        {% else %}
+          <div class="form-help">
+            Explain clearly and constructively. Your answer will be routed directly to <strong>{{ doubt.student.name }}</strong> in their private &ldquo;My Doubts&rdquo; dashboard.
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap;">
+        <a href="{% url 'teacher_all_doubts' %}" class="btn btn-secondary">
+          Cancel
+        </a>
+        <button type="submit" class="btn btn-success" style="padding: 0.75rem 1.75rem; font-size: 1rem;">
+          ✓ Submit Answer
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
