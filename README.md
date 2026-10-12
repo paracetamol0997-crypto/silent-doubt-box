@@ -329,6 +329,14 @@ This repository is pre-configured with `render.yaml`, `Procfile`, and `build.sh`
 3. Select **`paracetamol0997-crypto/silent-doubt-box`**.
 4. Railway will automatically build using the `Procfile` and start your app!
 
+### Option C: Deploy on Vercel
+1. Go to [Vercel.com](https://vercel.com/) and sign in with GitHub.
+2. Click **Add New...** $\rightarrow$ **Project**.
+3. Import **`paracetamol0997-crypto/silent-doubt-box`**.
+4. Vercel automatically detects `vercel.json` and configures the Python serverless function.
+5. Click **Deploy**!
+> **Note on Vercel & Databases:** Vercel functions are serverless and ephemeral. For full persistent data across serverless instances, connect a free PostgreSQL database (e.g. from [Neon.tech](https://neon.tech/) or [Supabase](https://supabase.com/)) by adding a `DATABASE_URL` environment variable in your Vercel Project Settings. If no `DATABASE_URL` is provided, the app will run with the bundled demo SQLite database in `/tmp`.
+
 ---
 
 ## 13. License
